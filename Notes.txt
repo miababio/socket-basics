@@ -2,12 +2,37 @@
                                     -----
                                     
 Getting Started
-    - 
+    - Before, we used HTTP requests between the client and the server to manage and retrieve data (GET, POST, etc.)
+    - With sockets, we can get the server to push live data to the client, without the client having to request anything
+        - Can be useful for examples like messaging (chat app), or email
+    - 2-way communication; Client can ask/receive info, and the server can do the same
+    - Setting up for using sockets
+        - Express -> version 4.13.3
+        - server.js
+            - Difference this time is that we are starting the server with built-in node modules, instead of using express
+            - See Example 1
     
     
  
                                   Examples
                                   --------
                             
-Example 1 - 
+Example 1 - Setup for Socket.io
+---------
+var PORT = process.env.PORT || 3000;
+var express = require("express");
+var app = express();
+
+// Tells Node to start a new server and use the Express app as a boilerplate
+// Anything the Express app listens to, the server should listen as well
+var http = require("http").Server(app);
+
+app.use(express.static(__dirname + "/public"));
+
+http.listen(PORT, function() {
+   console.log("Server started!"); 
+});
+
+
+Example 2 -
 ---------
