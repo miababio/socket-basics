@@ -30,8 +30,31 @@ Adding Socket.io To Your App
         - See Example 2
         
 Exploring the Frontend
+    - Moved script code into app.js
+    - Improves code testing, maintenance of code by putting it in a separate file
+    - On the server side, we used the on() function to let the server know when a client has connected to it; We can do something similar on the client side, to let the client know when the server is connected to the client
+        - See Example 3
+    - Problem: We can see our log from the server, but when it comes to seeing our messages on the front-end, we can't see it
+    - Solution: Use Chrome Developer Tools
+        - Let's you explore the frontend of your application    
+        - To get there, click on the Overflow menu -> More Tools -> Developer Tools
+            - Shortcut: Ctrl + Shift + I
+        - The first thing you get navigated to is the Elements inspector
+            - This tab let's you see all the HTML loaded in this project, including some extra things from chrome-extensions
+        - We want the Console tab
+            - Similar to command prompt
+            - This is where we see our "Connected to socket.io server!" message   
+            - Another cool thing with the console is that you can type in Javascript code straight up inside of it
+                - You can create variables and display them by just typing the variable name
+                    - Ex: > var name = "Michael";
+                          > name // prints Michael
+                - You can display complex objects/variable as well
+                    - Very useful for debugging when something's going wrong
+
+Sending Live Data Back & Forth
     - 
-                                  
+        
+        
                                   
                                   Examples
                                   --------
@@ -93,5 +116,14 @@ Example 2 - Connecting to the Server
     </html>
 
 
-Example 3 - 
+Example 3 - Connecting Client to Server
+---------
+var socket = io();
+
+socket.on("connect", function() {
+   console.log("Connected to socket.io server!"); 
+});
+
+
+Example 4 -
 ---------
