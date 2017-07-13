@@ -11,9 +11,28 @@ Getting Started
         - server.js
             - Difference this time is that we are starting the server with built-in node modules, instead of using express
             - See Example 1
+    - Quick Reminder for pushing code to heroku
+        - First time around you have to do:
+            - heroku create
+            - git push heroku master (only need to specify master the first time)
+        - After that, you can normally do "git push heroku"
     
-    
- 
+Adding Socket.io To Your App
+    - Install module Socket.io
+        - Using version 1.3.7, latest version is 2.0.3
+    - To start using it, we require it like so:
+        - var io = require("socket.io")(http);
+        - Remember how to use Express we used the 'app' variable, and did commands with it (app.use, app.get, etc.)? Think of using the 'io' variable to do the same thing, but with sockets
+    - To see this in action, we need to do some code on the frontend as well
+        - Adding jQuery (http://jquery.com/download/)
+        - Add socket-io (https://cdn.socket.io/socket.io-1.3.7.js)
+    - Connecting to our server
+        - See Example 2
+        
+Exploring the Frontend
+    - 
+                                  
+                                  
                                   Examples
                                   --------
                             
@@ -34,5 +53,45 @@ http.listen(PORT, function() {
 });
 
 
-Example 2 -
+Example 2 - Connecting to the Server
+---------
+
+    server.js
+    ---------
+    var PORT = process.env.PORT || 3000;
+    var express = require("express");
+    var app = express();
+    var http = require("http").Server(app);
+    var io = require("socket.io")(http);              // Format socket.io expects
+
+    app.use(express.static(__dirname + "/public"));
+
+    io.on("connection", function() {                  // on -> lets you listen for events (name of event, function)
+        console.log("User connected via socket.io!"); // prints when we get a connection
+    }); 
+
+    http.listen(PORT, function() {
+       console.log("Server started!"); 
+    });
+
+    index.html
+    ----------
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Socket.io Basics</title>
+        </head>
+        <body>
+            <script src="js/jquery-3.2.1.min.js"></script>
+            <script src="js/socket.io-1.3.7.js"></script>
+
+            <script type="text/javascript">
+                var socket = io(); // io is defined in socket.io library
+            </script>
+        </body>
+    </html>
+
+
+Example 3 - 
 ---------
