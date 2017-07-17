@@ -52,9 +52,26 @@ Exploring the Frontend
                     - Very useful for debugging when something's going wrong
 
 Sending Live Data Back & Forth
+    - Ex: Chat app;
+        - Basic idea is let's say it's between you and someone else. You send a message -> message goes to server -> server gets message and sends it to everybody's screen, including yours
+    - server.js io.on actually has a "socket" parameter
+        - io.on("connection", function(socket)
+            - socket = 1 individual connection
+            - inside of this fuction, you can have as many custom events as you want (message, photoResized, pizzeDelivered, etc.)
+            - emit("<event_name>", <data_you_want_to_send>)
+                - event_name -> a custom event name (Ex: "message")
+                - <data_you_want_to_send> -> The data you want to send
+                    - Note: This parameter only lets you have 1 thing to send, so if you want to send multiple things, a good idea is to use an object
+                        - This let's you send all data at once, such as the text, a timestamp, etc.
+    - Sending live data -> basic example
+        - See Example 4
+    - Two Browsers Communicating
+        - See Example 5
+            - NOTE: socket.broadcast.emit -> Sends to all browsers EXCEPT you
+                    io.emit               -> Sends to all browsers INCLUDING you
+
+Creating The Front-end UI
     - 
-        
-        
                                   
                                   Examples
                                   --------
@@ -125,5 +142,79 @@ socket.on("connect", function() {
 });
 
 
-Example 4 -
+Example 4 - Send Live Data -> Server to Client Example
+---------
+
+    server.js
+    ---------
+    var PORT = process.env.PORT || 3000;
+    var express = require("express");
+    var app = express();
+    var http = require("http").Server(app);
+    var io = require("socket.io")(http); // Format socket.io expects
+
+    app.use(express.static(__dirname + "/public"));
+
+    io.on("connection", function(socket) { // on -> lets you listen for events (name of event, function)
+        console.log("User connected via socket.io!"); // prints when we get a connection
+
+        socket.emit("message", { // Emits an event; (event_name, data to send)
+            text: "Welcome to the chat application!"
+        });
+    }); 
+
+    app.js
+    ------
+    http.listen(PORT, function() {
+       console.log("Server started!"); 
+    });
+
+    var socket = io();
+
+    socket.on("connect", function() {
+       console.log("Connected to socket.io server!"); 
+    });
+
+    socket.on("message", function(message) {
+        console.log("New message:");
+        console.log(message.text);
+    });
+    
+    
+Example 5 - Two Browsers Communicating (server.js)
+---------
+var PORT = process.env.PORT || 3000;
+var express = require("express");
+var app = express();
+var http = require("http").Server(app);
+var io = require("socket.io")(http); // Format socket.io expects
+
+app.use(express.static(__dirname + "/public"));
+
+io.on("connection", function(socket) { // on -> lets you listen for events (name of event, function)
+    console.log("User connected via socket.io!"); // prints when we get a connection
+    
+    socket.on("message", function(message) { // Listens for a message event
+        console.log("Message received: " + message.text);
+        socket.broadcast.emit("message", message); // Sends message to every other browser connected except us
+    });
+    
+    socket.emit("message", { // Emits an event; (event_name, data to send)
+        text: "Welcome to the chat application!"
+    });
+}); 
+
+http.listen(PORT, function() {
+   console.log("Server started!"); 
+});
+
+    In Chrome
+    ---------
+        - Open two browsers and have them both connect to localhost:3000
+        - Open DevTools on both
+        - On one broswer, onpen the Console tab and send a message, and see it appear on the other, and vice-versa!
+            - Ex: socket.emit("message", {text: "Hey Everybody!"});
+
+
+Example 6 - 
 ---------
