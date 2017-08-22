@@ -11,7 +11,7 @@ io.on("connection", function(socket) { // on -> lets you listen for events (name
     
     socket.on("message", function(message) { // Listens for a message event
         console.log("Message received: " + message.text);
-        socket.broadcast.emit("message", message); // Sends message to every other browser connected except us
+        io.emit("message", message); // Sends message to every other browser connected including us
     });
     
     socket.emit("message", { // Emits an event; (event_name, data to send)

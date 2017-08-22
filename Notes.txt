@@ -85,12 +85,24 @@ Creating The Front-end UI
                 - You can also pass in ID's
                     - Ex: jQuery("input") // grabs all the input tags
             - The '$' in front of the 'form' variable means that the form variable is going to store a jQuery instance of an element
-                - Meaning it can accesss methods of a jQuery element
+                - Meaning it can access methods of a jQuery element
         - See Example 6
         
 Showing Messages In App
+    - Right now, when a message is sent, you can only see it in the console
+    - Let's change it so the messages show up live in our HTML
+    - index.html -> Added <div> to insert messages there
+    - Note: jQuery(".messages")
+        - To target an ID, use the '#' sign                         ('#messages')
+        - To target an element by a tag name, just use the tag name ('input[name=message]')
+        - to target a class, use the '.' sign                       ('.message')
+    - See Example 7
+    - Problem: Right now when you send a message, you can't see it; You can only see it on the receiving side
+        - Solution: In server.js, change socket.broadcast.emit(...) to io.emit(...)
+            - Remember -> socket.broadcast.emit() Sends to all browsers EXCEPT you, while io.emit() sends to all browsers INCLUDING you
+
+Working With Time
     - 
-    
     
     
                                   
@@ -252,5 +264,34 @@ $form.on("submit", function(event) { // submit -> built-in browser event that al
 });
 
 
-Example 7 - 
+Example 7 - Making Messages Visual
 ---------
+
+    index.html
+    ----------
+    <body>
+        <div class="messages">
+            <!-- Messages end up here! -->
+        </div>
+        ...
+        ...
+    </body>
+
+    app.js
+    ------
+    socket.on("message", function(message) {
+        console.log("New message:");
+        console.log(message.text);
+
+        jQuery(".messages").append("<p>" + message.text + "</p>"); // Add the message to the <div> tag in index.html
+    });
+    
+    In Chrome
+    ---------
+        - Bring up 2 browsers and go to localhost:3000
+        - Send a message in either one and see the action!  
+    
+    
+Example 8 -
+---------
+
