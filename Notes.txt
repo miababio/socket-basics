@@ -173,7 +173,7 @@ Timestamps
           - Let's break down what's happening
             - moment.utc()
                 - Instead of calling moment as a function like before, here we're accessing Moment's UTC property
-                - This tells Moment that we're passing in a tim ethat's in UTC, since all times are in that format
+                - This tells Moment that we're passing in a time that's in UTC, since all times are in that format
                 - By doing this, we can get a local representation of that time
                     - Meaning, even though this timestamp is a particular point in time, this will automatically convert that time into my local time for me to view (Central Time in my case)
                 - See Example 8
@@ -183,7 +183,14 @@ Timestamps
                                 - Ex: console.log(timestampMoment.local().format("h:mm a")); // 11:17 pm
         
 Show Message Time in Chat App
+    - See Example 9
+    
+Parsing Query Params
     - 
+    
+    
+    
+    
     
                                   
                                   Examples
@@ -379,6 +386,36 @@ var timestampMoment = moment.utc(timestamp); // Accessing Moment's UTC property
 console.log(timestampMoment.format()); // Displays 2017-10-01T04:17:05+00:00
 
 
-Example 9 -
+Example 9 - Showing Timestamp With Messages
 ---------
+
+    server.js
+    ---------
+    var moment = require("moment");
+    ...
+
+    socket.on("message", function(message) { // Listens for a message event
+        console.log("Message received: " + message.text);
+        message.timestamp = moment().valueOf();
+        io.emit("message", message); // Sends message to every other browser connected including us
+    });
+
+    socket.emit("message", { // Emits an event; (event_name, data to send)
+        text: "Welcome to the chat application!",
+        timestamp: moment().valueOf() // Attach the timestamp property = javascript timestamp (ms)
+    });
+
+    public/js/app.js
+    ----------------
+    socket.on("message", function(message) {
+        var momentTimestamp = moment.utc(message.timestamp);
+        console.log("New message:");
+        console.log(message.text);
+
+        jQuery(".messages").append("<p><strong>" + momentTimestamp.local().format("h:mm a") + ": </strong> " +  message.text + "</p>"); //moment.format to concat it
+    });
+    
+    
+Example 10 -
+----------
 
