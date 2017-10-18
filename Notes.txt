@@ -186,8 +186,41 @@ Show Message Time in Chat App
     - See Example 9
     
 Parsing Query Params
+    - When creating a socket.io app, there might be variables you want to send along/use inside the app
+        - In our case, we want to have
+            - A name, so we can add that every time we send a message
+            - A room, so that you caan only send/receive messages from people your in the same room with
+    - Everything after the '?' in a web address is part of a query parameter
+        - Each query consists of key/value pairs, with an '=' in between each one
+            - Ex: https://www.google.com/search?q=libgdx&oq=libgdx&aqs=chrome.0.69i59j69i60l4j0.999j0j7&sourceid=chrome&ie=UTF-8
+                - Multiple queries are separated by an ampersand (&)
+    - Surprisingly, there isnt a defualt way to grab the query in Javascript (verify later)
+        - Using specific code from Andrew in this case to make it easier (QueryParams.js)
+    - NOTE: For future reference
+        - Open up Chrome DevTools
+        - In Console, type "window.location" and press Enter
+            - This returns a Location object containing various amounts of data, with one of the properties being "search"
+                - This is where you'll see the query string you have in the address bar
+    - To show QueryParams.js works:
+        - Add it to index.html
+        - In app.js add the following
+            - var name = getQueryVariable("name");
+              var room = getQueryVariable("room");
+              console.log(`${name} wants to join ${room}`);
+              
+            - If we had http://localhost:3000/?name=Michael&room=LOTR%20Fans as our link, we would get "Michael wants to join LOTR Fans" as a result in the console
+              
+
+Showing Names
+    - On the client, when we send a message, we can add a "name" property to our message, and then send it to every user, including ourselves
+    - See Example 10
+        - Note: If you have no queries in your addres (so just localhost:3000), and you try typing a message, your name comes up as "undefined"
+            - This is due to the getQueryVariable method. Andrew currently has it as returning undefined if the query doesn't exist.
+            - We can fix this by changing the first line in app.js to -> var name = getQueryVariable("name") || "Anonymous"; 
+                - Now the name displays "Anonymous"
+
+Add A Join Page
     - 
-    
     
     
     
@@ -416,6 +449,38 @@ Example 9 - Showing Timestamp With Messages
     });
     
     
-Example 10 -
+Example 10 - Showing Names
+----------
+
+    app.js
+    ------
+    var $message = jQuery(".messages"); // $ before the variable helps distinguish what will be used for jQuery
+    ...
+
+    $message.append("<p><strong>" + message.name + " " + momentTimestamp.local().format("h:mm a") + "</strong></p>");
+    $message.append("<p>" + message.text + "</p>");
+
+    ...
+
+    $form.on("submit", function(event) { 
+        event.preventDefault(); 
+        var $message = $("input[name=message]"); 
+        socket.emit("message", {
+           name: name,
+           text: $message.val() 
+        });
+        $message.val(""); 
+    });
+
+    server.js
+    ---------
+    socket.emit("message", { // Emits an event; (event_name, data to send)
+        name: "System",
+        text: "Welcome to the chat application!",
+        timestamp: moment().valueOf()
+    });
+    
+    
+Example 11 -
 ----------
 

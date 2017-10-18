@@ -16,10 +16,8 @@ io.on("connection", function(socket) { // on -> lets you listen for events (name
         io.emit("message", message); // Sends message to every other browser connected including us
     });
     
-    // timestamp property = javascript timestamp (ms)
-    // attatch the property timestamp
-    
     socket.emit("message", { // Emits an event; (event_name, data to send)
+        name: "System",
         text: "Welcome to the chat application!",
         timestamp: moment().valueOf()
     });
