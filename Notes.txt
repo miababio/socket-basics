@@ -272,6 +272,12 @@ Connecting To A Room
     - See Example 13 
             
 Send Disconnect Message
+    - Show a message saying "so-and-so has left"
+    - For this, we'll use the built in "disconnect" method in socket.io
+        - Fired from client to the server
+    - See Example 14
+    
+Adding @currentUser Command
     - 
     
                                   
@@ -630,5 +636,27 @@ socket.on("message", function(message) { // Listens for a message event
 });
 
 
-Example 14 - 
+Example 14 - Disconnecting A User
+----------
+
+    server.js
+    ---------
+    socket.on("disconnect", function() {
+        var userData = clientInfo[socket.id];
+        // First check if user is part of a chat room
+        if(typeof userData !== "undefined")
+        {
+            socket.leave(userData.room); // Disconnects user from chat room
+            io.to(userData.room).emit("message", {
+                name: "System",
+                text: userData.name + " has left!", // Tell everyone user left
+                timestamp: moment().valueOf()
+            });
+            // Delete data from clientInfo
+            delete clientInfo[socket.id]; // delete -> removes a property from an object
+        }
+    });
+
+
+Example 15 -
 ----------

@@ -12,6 +12,22 @@ var clientInfo = {};
 io.on("connection", function(socket) { // on -> lets you listen for events (name of event, function)
     console.log("User connected via socket.io!"); // prints when we get a connection
     
+    socket.on("disconnect", function() {
+        var userData = clientInfo[socket.id];
+        // First check if user is part of a chat room
+        if(typeof userData !== "undefined")
+        {
+            socket.leave(userData.room); // Disconnects user from chat room
+            io.to(userData.room).emit("message", {
+                name: "System",
+                text: userData.name + " has left!", // Tell everyone user left
+                timestamp: moment().valueOf()
+            });
+            // Delete data from clientInfo
+            delete clientInfo[socket.id]; // delete -> removes a property from an object
+        }
+    });
+    
     socket.on("joinRoom", function(req) { // req -> contains name, room object we made in app.js
         clientInfo[socket.id] = req;
         socket.join(req.room); // join = built-in Socket method that tells the incoming socket to join a specific room
