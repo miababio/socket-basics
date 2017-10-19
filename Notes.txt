@@ -220,9 +220,14 @@ Showing Names
                 - Now the name displays "Anonymous"
 
 Add A Join Page
+    - Now we want to be able to give the user the ability to set/change their name, instead of using the url to get their name
+    - We'll create another html file that will take the name and click a Join button, which will then move to the chat app
+    - <label> -> tells you what the field is for
+    - Challenge: Add a link to navigate back to the index from chat.html to change your name on the fly
+        - See Example 11
+    
+Chat Room Names
     - 
-    
-    
     
     
                                   
@@ -481,6 +486,48 @@ Example 10 - Showing Names
     });
     
     
-Example 11 -
+Example 11 - Join Page + Change Name Functionality
+----------
+
+    index.html
+    ----------
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Socket.io Basics</title>
+        </head>
+        <body>
+            <h1>Join Chat</h1>
+            <form action="/chat.html">
+                <label>Display Name</label>
+                <input type="text" name="name"/>
+                <input type="submit" value="Join Chat"/>
+            </form>
+        </body>
+    </html>
+
+    chat.html
+    ---------
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Socket.io Basics</title>
+        </head>
+        <body>
+            <a href="index.html">Change Settings</a>
+            <div class="messages">
+                <!-- Messages end up here! -->
+            </div>
+
+            ...
+            ...
+
+        </body>
+    </html> 
+
+
+Example 12 -
 ----------
 
