@@ -278,7 +278,16 @@ Send Disconnect Message
     - See Example 14
     
 Adding @currentUser Command
+    - This command will list all of the users in the current room you are in
+    - If the message matches the command, we'll execute specific code for that instead
+    - See Example 15
+
+Bootstrap and Styling the Join Page
     - 
+
+
+
+    
     
                                   
                                   Examples
@@ -658,5 +667,52 @@ Example 14 - Disconnecting A User
     });
 
 
-Example 15 -
+Example 15 - Adding the @currentUsers command
+----------
+// Sends current users to provided socket
+function sendCurrentUsers(socket) {
+    // get the ID of the room from socket
+    // once you have that, look through clientInfo and see who else has same ID
+    // if they match, get username from it and add it to string
+    var info = clientInfo[socket.id];
+    var users = [];
+
+    if(typeof info === 'undefined') {
+        return; // stops us from searching for rooms that dont exist
+    }
+
+    Object.keys(clientInfo).forEach(function(socketId) { // socketId = key in this case
+        // Gets info from the client (Ex: {"abc123": {'name': "Mike", "room": "LOTR Fans"} }
+        // This grabs "abc123", so value is the inner object
+        var userInfo = clientInfo[socketId]; 
+        if(info.room === userInfo.room)
+            users.push(userInfo.name);
+    });
+
+    socket.emit("message", {
+       name: "System",
+       text: "Current Users: " + users.join(", "),
+       timestamp: moment().valueOf() 
+    });
+}
+
+/.../
+
+socket.on("message", function(message) { // Listens for a message event
+    console.log("Message received: " + message.text);
+
+    if(message.text === "@currentUsers")  // if a specific command was types (in this case to list the cuurent users)
+    {
+        sendCurrentUsers(socket);
+    }
+    else // run default code
+    {
+        message.timestamp = moment().valueOf();
+        io.to(clientInfo[socket.id].room).emit("message", message); // Sends message to every other browser connected including us that are in the same room as us
+    }
+
+});
+
+
+Example 16 -
 ----------

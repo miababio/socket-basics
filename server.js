@@ -9,6 +9,31 @@ app.use(express.static(__dirname + "/public"));
 
 var clientInfo = {};
 
+// Sends current users to provided socket
+function sendCurrentUsers(socket) {
+    // Get the ID of the room from socket
+    // Once you have that, look through clientInfo and see who else has same ID
+    // If they match, get username from it and add it to string
+    var info = clientInfo[socket.id];
+    var users = [];
+
+    if(typeof info === 'undefined') {
+        return; // stops us from searching for rooms that dont exist
+    }
+
+    Object.keys(clientInfo).forEach(function(socketId) {
+        var userInfo = clientInfo[socketId]; 
+        if(info.room === userInfo.room)
+            users.push(userInfo.name);
+    });
+
+    socket.emit("message", {
+       name: "System",
+       text: "Current Users: " + users.join(", "),
+       timestamp: moment().valueOf() 
+    });
+}
+
 io.on("connection", function(socket) { // on -> lets you listen for events (name of event, function)
     console.log("User connected via socket.io!"); // prints when we get a connection
     
@@ -41,8 +66,17 @@ io.on("connection", function(socket) { // on -> lets you listen for events (name
     
     socket.on("message", function(message) { // Listens for a message event
         console.log("Message received: " + message.text);
-        message.timestamp = moment().valueOf();
-        io.to(clientInfo[socket.id].room).emit("message", message); // Sends message to every other browser connected including us that are in the same room as us
+
+        if(message.text === "@currentUsers") 
+        {
+            sendCurrentUsers(socket);
+        }
+        else 
+        {
+            message.timestamp = moment().valueOf();
+            io.to(clientInfo[socket.id].room).emit("message", message); // Sends message to every other browser connected including us that are in the same room as us
+        }
+
     });
     
     socket.emit("message", { // Emits an event; (event_name, data to send)
