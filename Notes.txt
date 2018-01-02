@@ -283,7 +283,27 @@ Adding @currentUser Command
     - See Example 15
 
 Bootstrap and Styling the Join Page
-    - 
+    - Add the bootstrap css file only (copy from CDN link and save)
+        - If you try running the app again, you automatically see some of the bootstrap changes on it! (wowee!)
+    - <div class="form-group">
+        - "form-group" is a bootstrap class that let's you style a label and an input field at the same time
+    - To center the content in Bootstrp 4 (since thats what I had), I had to change the div to:
+        - <div class="row justify-content-center">
+        - Update: switched back to v3 Bootstrap
+      instead of trying to do the col-md-4 col-md-offset-4 thing
+
+Styling the Join Page
+    - <div class="input-group">
+        - input-group let's you pair up texts and icons with other input fields
+    - styles.css explanation
+        - min-height: Set the minumum height of an element
+            - vh -> Viewport Height, which is a relative length
+                - When we say 100vh, we're really saying we want this element to take up 100% of the viewport height (100% screen size)
+        - margin: 0 -> Margin sets the size of the whitespace outside the border. Having 0 means we want no space outside the border
+        - display: flex; -> Enables Flexbox
+            - Flexbox ensures that elements behave predictably when the page layout has to accommodate for different screen sizes/different display devices
+        - align-items: center -> align-items definies how browsers distrubute space between/around flex items along the cross-axis of their container
+            - center = vertical center alignment
 
 
 
