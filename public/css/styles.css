@@ -4,3 +4,11 @@
     display: flex;
     align-items: center;
 }
+
+h1 {
+    margin: 24px 0; /* 24px for above and below, 0 for left/right */
+}
+
+.messages p {
+    margin: 6px 0;
+}

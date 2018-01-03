@@ -306,7 +306,10 @@ Styling the Join Page
             - center = vertical center alignment
 
 Styling the Chat Page
-    - 
+    - N/A
+
+Final Custom Styles
+    - N/A
 
     
     
