@@ -289,8 +289,8 @@ Bootstrap and Styling the Join Page
         - "form-group" is a bootstrap class that let's you style a label and an input field at the same time
     - To center the content in Bootstrp 4 (since thats what I had), I had to change the div to:
         - <div class="row justify-content-center">
-        - Update: switched back to v3 Bootstrap
       instead of trying to do the col-md-4 col-md-offset-4 thing
+        - Update: switched back to v3 Bootstrap
 
 Styling the Join Page
     - <div class="input-group">
@@ -305,7 +305,8 @@ Styling the Join Page
         - align-items: center -> align-items definies how browsers distrubute space between/around flex items along the cross-axis of their container
             - center = vertical center alignment
 
-
+Styling the Chat Page
+    - 
 
     
     
